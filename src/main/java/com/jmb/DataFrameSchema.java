@@ -1,5 +1,6 @@
 package com.jmb;
 
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -24,9 +25,12 @@ public class DataFrameSchema {
 
     private void run() {
 
+        SparkConf appConfig = new SparkConf().set("spark.testing.memory", "900000000");
+
         //Create the Spark Session
         SparkSession session = SparkSession.builder()
                 .appName("DataFrameSchemaApp")
+                .config(appConfig)
                 .master("local").getOrCreate();
 
         //Ingest data from CSV file into a DataFrame
