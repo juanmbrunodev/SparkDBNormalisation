@@ -54,11 +54,7 @@ public class DataFrameSchema {
         subjectsDf.show(5);
 
         //Adjust to the books table the renamed DataFrame
-        Dataset<Row> booksDf = renamedDf
-                .withColumn("BookID",
-                        concat(renamedDf.col("title"), lit("_"), renamedDf.col("author_name")))
-                .withColumn("SubjectID", concat(renamedDf.col("subjects"), lit("_S")))
-                .drop("subjects");
+        Dataset<Row> booksDf = createBooksDf(renamedDf);
 
         LOGGER.info("Schema of Books DF as JSON: " + booksDf.schema().prettyJson());
     }
@@ -69,6 +65,14 @@ public class DataFrameSchema {
                 .drop("classificacions", "languages", "title", "type", "author_birth", "author_death",
                 "author_name", "publication_day", "publication_full", "publication_month", "publication_month_name",
                 "publication_month_name", "publication_year");
+    }
+
+    private Dataset<Row> createBooksDf(Dataset<Row> renamedDf) {
+        return renamedDf
+                .withColumn("BookID",
+                        concat(renamedDf.col("title"), lit("_"), renamedDf.col("author_name")))
+                .withColumn("SubjectID", concat(renamedDf.col("subjects"), lit("_S")))
+                .drop("subjects");
     }
 
     private Dataset<Row> renameColumns(Dataset<Row> dfFewerColumns) {
